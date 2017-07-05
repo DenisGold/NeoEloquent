@@ -1,12 +1,12 @@
 {
-    "name": "vinelab/neoeloquent",
+    "name": "denisgold/neoeloquent",
     "description": "Laravel wrapper for the Neo4j graph database REST interface",
     "keywords": ["laravel", "neo4j", "graph", "database", "neoeloquent"],
     "license": "MIT",
     "authors": [
         {
-            "name": "Abed Halawi",
-            "email": "abed.halawi@vinelab.com"
+            "name": "Denis Stoliarchuk",
+            "email": "dartius@mail.ru"
         }
     ],
     "require": {
@@ -14,7 +14,7 @@
         "illuminate/support": "5.3.*",
         "illuminate/database": "5.3.*",
         "illuminate/pagination": "5.3.*",
-        "heydavid713/neo4jphp": "0.1.*",
+        "hdenisgold/neo4jphp": "0.1.*",
         "nesbot/carbon": "~1.0"
     },
     "require-dev": {
