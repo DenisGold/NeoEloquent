@@ -2,12 +2,14 @@
 
 use Vinelab\NeoEloquent\Helpers;
 use Illuminate\Database\Eloquent\Collection;
+use Vinelab\NeoEloquent\Connection;
 use Vinelab\NeoEloquent\Eloquent\Relations\HasOne;
 use Vinelab\NeoEloquent\Eloquent\Relations\HasMany;
 use Vinelab\NeoEloquent\Eloquent\Relations\MorphTo;
 use Vinelab\NeoEloquent\Eloquent\Relations\BelongsTo;
 use Vinelab\NeoEloquent\Eloquent\Relations\MorphMany;
 use Vinelab\NeoEloquent\Eloquent\Relations\HyperMorph;
+use Vinelab\NeoEloquent\Eloquent\Relations\OneRelation;
 use Vinelab\NeoEloquent\Query\Builder as QueryBuilder;
 use Vinelab\NeoEloquent\Eloquent\Relations\MorphedByOne;
 use Vinelab\NeoEloquent\Eloquent\Relations\BelongsToMany;
@@ -26,7 +28,8 @@ abstract class Model extends IlluminateModel {
     /**
      * Set the node label for this model
      *
-     * @param  string|array  $labels
+     * @param  string|array  $label
+     * @return string|array
      */
     public function setLabel($label)
     {
@@ -48,8 +51,8 @@ abstract class Model extends IlluminateModel {
      * @override
      * Create a new Eloquent query builder for the model.
      *
-     * @param  Vinelab\NeoEloquent\Query\Builder $query
-     * @return Vinelab\NeoEloquent\Eloquent\Builder|static
+     * @param  \Vinelab\NeoEloquent\Query\Builder $query
+     * @return \Vinelab\NeoEloquent\Eloquent\Builder|static
      */
     public function newEloquentBuilder($query)
     {
@@ -60,11 +63,11 @@ abstract class Model extends IlluminateModel {
      * @override
      * Get a new query builder instance for the connection.
      *
-     * @return Vinelab\NeoEloquent\Query\Builder
+     * @return \Vinelab\NeoEloquent\Query\Builder
      */
     protected function newBaseQueryBuilder()
     {
-        $conn = $this->getConnection();
+        $conn = new Connection();
 
         $grammar = $conn->getQueryGrammar();
 
@@ -135,11 +138,11 @@ abstract class Model extends IlluminateModel {
      *
      * @param  string  $related
      * @param  string  $foreignKey
-     * @param  string  $otherKey
+     * @param  string  $ownerKey
      * @param  string  $relation
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null)
+    public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
     {
         // If no relation name was given, we will use this debug backtrace to extract
         // the calling method's name and use that as the relationship name as most
@@ -166,9 +169,9 @@ abstract class Model extends IlluminateModel {
         // actually be responsible for retrieving and hydrating every relations.
         $query = $instance->newQuery();
 
-        $otherKey = $otherKey ?: $instance->getKeyName();
+        $ownerKey = $ownerKey ?: $instance->getKeyName();
 
-        return new BelongsTo($query, $this, $foreignKey, $otherKey, $relation);
+        return new BelongsTo($query, $this, $foreignKey, $ownerKey, $relation);
     }
 
     /**
@@ -177,10 +180,10 @@ abstract class Model extends IlluminateModel {
      *
      * @param  string  $related
      * @param  string  $foreignKey
-     * @param  string  $localKey
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @param  string  $ownerKey
+     * @return Relations\HasOne
      */
-    public function hasOne($related, $foreignKey = null, $otherKey = null, $relation = null)
+    public function hasOne($related, $foreignKey = null, $ownerKey = null, $relation = null)
     {
         // If no relation name was given, we will use this debug backtrace to extract
         // the calling method's name and use that as the relationship name as most
@@ -207,9 +210,9 @@ abstract class Model extends IlluminateModel {
         // actually be responsible for retrieving and hydrating every relations.
         $query = $instance->newQuery();
 
-        $otherKey = $otherKey ?: $instance->getKeyName();
+        $ownerKey = $ownerKey ?: $instance->getKeyName();
 
-        return new HasOne($query, $this, $foreignKey, $otherKey, $relation);
+        return new HasOne($query, $this, $foreignKey, $ownerKey, $relation);
     }
 
     /**
@@ -248,12 +251,13 @@ abstract class Model extends IlluminateModel {
      * Define a many-to-many relationship.
      *
      * @param  string  $related
-     * @param  string  $type
-     * @param  string  $key
+     * @param  string  $table
+     * @param  string  $foreignKey
+     * @param  string  $ownerKey
      * @param  string  $relation
      * @return \Vinelab\NeoEloquent\Eloquent\Relations\BelongsToMany
      */
-    public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null)
+    public function belongsToMany($related, $table = null, $foreignKey = null, $ownerKey = null, $relation = null)
     {
         // To escape the error:
         // PHP Strict standards:  Declaration of Vinelab\NeoEloquent\Eloquent\Model::belongsToMany() should be
@@ -261,7 +265,7 @@ abstract class Model extends IlluminateModel {
         // We'll just map them in with the variables we want.
         $type     = $table;
         $key      = $foreignKey;
-        $relation = $otherKey;
+        $relation = $ownerKey;
         // If no relation name was given, we will use this debug backtrace to extract
         // the calling method's name and use that as the relationship name as most
         // of the time this will be what we desire to use for the relationships.
@@ -343,9 +347,10 @@ abstract class Model extends IlluminateModel {
      * Define a many-to-many relationship.
      *
      * @param  string  $related
+     * @param  string  $name
      * @param  string  $type
-     * @param  string  $key
-     * @param  string  $relation
+     * @param  string  $id
+     * @param  string  $localKey
      * @return \Vinelab\NeoEloquent\Eloquent\Relations\MorphMany
      */
     public function morphMany($related, $name, $type = null, $id = null, $localKey = null)
@@ -490,6 +495,12 @@ abstract class Model extends IlluminateModel {
         }
     }
 
+    /**
+     * @param array $attributes
+     * @param array $relations
+     * @param array $options
+     * @return mixed
+     */
     public static function createWith(array $attributes, array $relations, array $options = [])
     {
         // we need to fire model events on all the models that are involved with our operaiton,

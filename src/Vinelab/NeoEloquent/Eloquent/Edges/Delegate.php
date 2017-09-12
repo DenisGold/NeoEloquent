@@ -38,10 +38,9 @@ abstract class Delegate {
     public function __construct(Builder $query)
     {
         $this->query  = $query;
-        $model = $query->getModel();
-
+        
         // Setup the database connection and client.
-        $this->connection = $model->getConnection();
+        $this->connection = $query->getConnection();
         $this->client = $this->connection->getClient();
     }
 
