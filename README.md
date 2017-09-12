@@ -32,7 +32,7 @@ Add the package to your `composer.json` and run `composer update`.
 ```json
 {
     "require": {
-        "vinelab/neoeloquent": "dev-laravel5.4"
+        "denisgold/neoeloquent": "dev-laravel5.4"
     }
 }
 ```
@@ -42,7 +42,7 @@ Add the package to your `composer.json` and run `composer update`.
 ```json
 {
     "require": {
-        "vinelab/neoeloquent": "1.4.*"
+        "denisgold/neoeloquent": "1.4.*"
     }
 }
 ```
@@ -52,7 +52,7 @@ Add the package to your `composer.json` and run `composer update`.
 ```json
 {
     "require": {
-        "vinelab/neoeloquent": "1.3.*"
+        "denisgold/neoeloquent": "1.3.*"
     }
 }
 ```
@@ -62,7 +62,7 @@ Add the package to your `composer.json` and run `composer update`.
 ```json
 {
     "require": {
-        "vinelab/neoeloquent": "1.2.*"
+        "denisgold/neoeloquent": "1.2.*"
     }
 }
 ```
@@ -72,7 +72,7 @@ Add the package to your `composer.json` and run `composer update`.
 ```json
 {
     "require": {
-        "vinelab/neoeloquent": "1.2.5"
+        "denisgold/neoeloquent": "1.2.5"
     }
 }
 ```
@@ -82,7 +82,7 @@ Add the package to your `composer.json` and run `composer update`.
 ```json
 {
     "require": {
-        "vinelab/neoeloquent": "1.1.*"
+        "denisgold/neoeloquent": "1.1.*"
     }
 }
 ```
@@ -1153,7 +1153,7 @@ $emails = DB::table('User')->collect('email');
 ```
 
 ## Changelog
-Check the [Releases](https://github.com/Vinelab/NeoEloquent/releases) for details.
+Check the [Releases](https://github.com/DenisGold/NeoEloquent/releases) for details.
 
 ## Avoid
 
