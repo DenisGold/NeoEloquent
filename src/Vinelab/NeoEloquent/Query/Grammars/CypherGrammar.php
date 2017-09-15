@@ -403,6 +403,9 @@ class CypherGrammar extends Grammar {
      */
     public function compileOrders(Builder $query, $orders)
     {
+        if(is_array($query->aggregate) && isset($query->aggregate["function"]) && $query->aggregate["function"] === 'count')
+	    	return '';
+	    
         return 'ORDER BY '. implode(', ', array_map(function($order){
                 return $this->wrap($order['column']).' '.mb_strtoupper($order['direction']);
         }, $orders));
