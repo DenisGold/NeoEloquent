@@ -257,7 +257,7 @@ abstract class Model extends IlluminateModel {
      * @param  string  $relation
      * @return \Vinelab\NeoEloquent\Eloquent\Relations\BelongsToMany
      */
-    public function belongsToMany($related, $table = null, $foreignKey = null, $ownerKey = null, $relation = null)
+    public function belongsToMany($related, $table = null, $foreignKey = null, $ownerKey = null, $parentKey = null, $relatedKey = null, $relation = null)
     {
         // To escape the error:
         // PHP Strict standards:  Declaration of Vinelab\NeoEloquent\Eloquent\Model::belongsToMany() should be
@@ -294,7 +294,7 @@ abstract class Model extends IlluminateModel {
         // appropriate query constraint and entirely manages the hydrations.
         $query = $instance->newQuery();
 
-        return new BelongsToMany($query, $this, $type, $key, $relation);
+        return new BelongsToMany($query, $this, $type, $key, $parentKey, $relatedKey, $relation);
     }
 
     /**
