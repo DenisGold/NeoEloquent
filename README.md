@@ -32,7 +32,7 @@ Add the package to your `composer.json` and run `composer update`.
 ```json
 {
     "require": {
-        "denisgold/neoeloquent": "dev-laravel5.4"
+        "denisgold/neoeloquent": "1.5.*"
     }
 }
 ```
