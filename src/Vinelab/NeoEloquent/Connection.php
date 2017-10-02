@@ -62,8 +62,8 @@ class Connection extends IlluminateConnection {
      */
     public function __construct(array $config = array())
     {
-	    //Setup configs
-	    $this->defaults = is_array(config('asgard.neojmodel.config.neo4j'))? config('asgard.neojmodel.config.neo4j') : $this->defaults;
+	//Setup from configs
+	$this->defaults = is_array(config('neo-eloquent.connection'))? config('neo-eloquent.connection') : $this->defaults;
 	    
         $this->config = $config;
 
